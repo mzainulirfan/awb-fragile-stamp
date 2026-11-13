@@ -1,0 +1,16 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Local extension packages and signing material
+*.crx
+*.pem
+*.key
+*.zip
+*.zip.sha256
+
+# Local test output
+out/
+tmp/

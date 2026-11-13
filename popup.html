@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shopee AWB Fragile Stamp</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main class="app">
+      <header class="topbar">
+        <div class="brand">
+          <img class="brand-mark" src="icons/icon48.png" alt="">
+          <div class="brand-copy">
+            <span class="eyebrow">SHOPEE · AWB TOOL</span>
+            <h1>Fragile Stamp</h1>
+          </div>
+        </div>
+
+        <label class="auto-toggle" title="Aktifkan stempel otomatis">
+          <span class="auto-copy">
+            <strong>AUTO</strong>
+            <small id="toggleState">Aktif</small>
+          </span>
+          <input id="enabled" type="checkbox" aria-label="Aktifkan stempel otomatis">
+          <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+        </label>
+      </header>
+
+      <section class="preview-card" aria-labelledby="previewTitle">
+        <div class="preview-meta">
+          <div>
+            <span class="section-kicker">LIVE PREVIEW</span>
+            <strong id="previewTitle">Area bawah label</strong>
+          </div>
+          <span class="safe-chip"><span aria-hidden="true"></span> Aman</span>
+        </div>
+
+        <div class="preview-stage">
+          <div class="mock-label-head" aria-hidden="true">
+            <span class="mock-route"></span>
+            <span class="mock-barcode"></span>
+          </div>
+          <div id="previewSafeArea" class="preview-safe-area">
+            <span class="safe-guide" aria-hidden="true">SAFE PRINT ZONE</span>
+            <div id="previewBox" class="preview-stamp" data-variant="badge">
+              <span class="stamp-alert" aria-hidden="true">!</span>
+              <div class="stamp-copy">
+                <span id="previewMain" class="stamp-main">FRAGILE</span>
+                <span id="previewSub" class="stamp-sub">JANGAN DIBANTING</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="control-card" aria-label="Pengaturan stempel">
+        <div id="controlTabs" class="control-tabs" role="tablist" aria-label="Jenis pengaturan">
+          <button id="appearanceTab" type="button" role="tab" aria-selected="true" aria-controls="appearancePanel" tabindex="0">
+            Tampilan
+          </button>
+          <button id="positionTab" type="button" role="tab" aria-selected="false" aria-controls="positionPanel" tabindex="-1">
+            Posisi
+          </button>
+        </div>
+
+        <section id="appearancePanel" class="tab-panel appearance-panel" role="tabpanel" aria-labelledby="appearanceTab">
+          <div class="control-row style-row">
+            <span class="control-label">Gaya</span>
+            <div class="style-picker" role="radiogroup" aria-label="Gaya stempel">
+              <button type="button" data-variant="badge" role="radio" aria-checked="true">
+                <span class="style-icon style-outline" aria-hidden="true"></span>Kotak
+              </button>
+              <button type="button" data-variant="bar" role="radio" aria-checked="false">
+                <span class="style-icon style-solid" aria-hidden="true"></span>Bar
+              </button>
+              <button type="button" data-variant="text" role="radio" aria-checked="false">
+                <span class="style-icon style-plain" aria-hidden="true">Aa</span>Teks
+              </button>
+            </div>
+          </div>
+
+          <div class="text-fields">
+            <label class="field">
+              <span>Tulisan utama</span>
+              <input id="main" type="text" maxlength="18" autocomplete="off" spellcheck="false">
+            </label>
+            <label class="field">
+              <span>Tulisan kedua</span>
+              <input id="sub" type="text" maxlength="24" autocomplete="off" spellcheck="false">
+            </label>
+          </div>
+
+          <div class="range-control size-control">
+            <div class="range-head">
+              <label for="scale">Ukuran stempel</label>
+              <output id="scaleOut" for="scale">100%</output>
+            </div>
+            <div class="range-line">
+              <span class="range-glyph small" aria-hidden="true">A</span>
+              <input id="scale" type="range" min="60" max="140" step="5" value="100">
+              <span class="range-glyph large" aria-hidden="true">A</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="positionPanel" class="tab-panel position-panel" role="tabpanel" aria-labelledby="positionTab" hidden>
+          <div class="position-heading">
+            <div>
+              <span class="section-kicker">KOORDINAT AMAN</span>
+              <strong id="positionSummary">Tengah · Awal</strong>
+            </div>
+            <button id="resetPosition" class="reset-button" type="button" title="Kembalikan posisi awal">
+              Reset
+            </button>
+          </div>
+
+          <div class="range-control axis-control">
+            <div class="range-head">
+              <label for="positionX">Horizontal</label>
+              <output id="positionXOut" for="positionX">Tengah</output>
+            </div>
+            <div class="range-line axis-line">
+              <span class="axis-arrow" aria-hidden="true">←</span>
+              <input id="positionX" type="range" min="-100" max="100" step="5" value="0">
+              <span class="axis-arrow" aria-hidden="true">→</span>
+            </div>
+          </div>
+
+          <div class="range-control axis-control">
+            <div class="range-head">
+              <label for="positionY">Vertikal</label>
+              <output id="positionYOut" for="positionY">Awal</output>
+            </div>
+            <div class="range-line axis-line">
+              <span class="axis-arrow" aria-hidden="true">↓</span>
+              <input id="positionY" type="range" min="-100" max="100" step="5" value="0">
+              <span class="axis-arrow" aria-hidden="true">↑</span>
+            </div>
+          </div>
+
+          <p class="safe-note"><span aria-hidden="true">✓</span> Gerakan dibatasi agar tidak mengenai barcode dan data label.</p>
+        </section>
+      </section>
+
+      <section id="status" class="status-line" data-tone="muted" role="status" aria-live="polite">
+        Memeriksa tab aktif…
+      </section>
+
+      <section class="actions" aria-label="Aksi PDF">
+        <button id="apply" class="action-button primary" type="button">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 6.2A7 7 0 1 0 17 12h-2a5 5 0 1 1-.3-3.4L12 11h6V5l-1.5 1.2Z"/></svg>
+          Terapkan
+        </button>
+        <button id="open" class="action-button secondary" type="button">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M11 3h6v6h-2V6.4l-6.3 6.3-1.4-1.4L13.6 5H11V3ZM4 5h5v2H6v7h7v-3h2v5H4V5Z"/></svg>
+          Buka
+        </button>
+        <button id="download" class="action-button secondary" type="button">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M9 3h2v7.2l2.6-2.6L15 9l-5 5-5-5 1.4-1.4L9 10.2V3ZM4 15h12v2H4v-2Z"/></svg>
+          Unduh
+        </button>
+      </section>
+
+      <footer class="meta-footer">
+        <span id="version">v1.2.0</span>
+        <span class="meta-separator"></span>
+        <span><span class="local-dot" aria-hidden="true"></span> Diproses lokal</span>
+      </footer>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>
