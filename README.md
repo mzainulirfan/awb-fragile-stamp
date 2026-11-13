@@ -48,20 +48,25 @@ dibundel di `lib/`.
 
 ## 3. Pengaturan (klik ikon ekstensi)
 
-Popup menggunakan dua tab. **Tampilan** berisi gaya, teks, dan ukuran;
-**Posisi** berisi penggeser horizontal/vertikal. Live preview di bagian atas
-langsung mengikuti semua perubahan sebelum PDF ditulis ulang.
+Popup menggunakan tiga tab. **Tampilan** berisi preset, ikon, gaya, teks, dan
+ukuran; **Posisi** berisi profil label serta penggeser horizontal/vertikal;
+**Halaman** menentukan halaman PDF batch yang akan diberi stempel. Live preview
+di bagian atas langsung mengikuti semua perubahan sebelum PDF ditulis ulang.
 
 | Kontrol | Fungsi |
 |---|---|
 | Switch atas | Aktif/matikan stempel otomatis |
-| Gaya: **Kotak / Bar / Teks** | Kotak = bingkai + ikon peringatan (paling hemat tinta), Bar = blok hitam penuh, Teks = teks tanpa bingkai |
+| Preset | Fragile, Jaga Tetap Kering, Sisi Ini ke Atas, atau Jangan Dilipat |
+| Ikon handling | Gelas, payung, panah atas, larangan lipat, peringatan, atau tanpa ikon |
+| Gaya: **Kotak / Bar / Teks** | Kotak = bingkai + ikon handling (paling hemat tinta), Bar = blok hitam penuh, Teks = teks tanpa bingkai |
 | Tulisan utama | Default `FRAGILE` (maks. 18 karakter) |
 | Tulisan kedua | Default `JANGAN DIBANTING` (maks. 24 karakter) |
 | Ukuran | 60%–140% dari ukuran default |
 | Posisi horizontal | Geser stempel ke kiri/kanan di dalam batas halaman |
 | Posisi vertikal | Geser stempel ke bawah/atas di area kosong label |
-| Reset posisi | Kembalikan horizontal dan vertikal ke tata letak awal |
+| Profil label | Otomatis, A6, thermal 100 × 150 mm, A5, atau profil kustom |
+| Reset posisi | Kembalikan ukuran dan posisi profil ke tata letak awal |
+| Halaman PDF | Terapkan ke semua halaman atau pilih nomor halaman tertentu |
 | Terapkan ulang | Memaksa stempel ditulis ulang pada tab AWB yang sedang aktif |
 | Buka PDF / Unduh | Membuka / mengunduh PDF yang sudah distempel |
 
@@ -87,8 +92,8 @@ Halaman /awbprint
 ```
 
 - Stempel digambar proporsional terhadap ukuran halaman, jadi tetap aman bila
-  Shopee mengubah template (A5/A6) atau membuat label multi-halaman — semua
-  halaman distempel.
+  Shopee mengubah template A5/A6. Pada PDF multi-halaman, pengguna dapat
+  menerapkannya ke semua halaman atau hanya nomor yang dipilih.
 - Kontrol posisi memakai rentang `-100..100`, tetapi hasil akhirnya selalu
   dijepit ke margin halaman dan batas aman di bawah baris `Pesan:`.
 - `MutationObserver` + interval ringan memastikan stempel dipasang ulang bila

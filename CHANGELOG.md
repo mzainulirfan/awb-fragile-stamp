@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.0
+
+- Tambah pemilih halaman untuk PDF batch: semua halaman atau pilihan manual.
+- Tambah preset **Fragile**, **Jaga Tetap Kering**, **Sisi Ini ke Atas**, dan **Jangan Dilipat**.
+- Tambah ikon handling vektor: gelas, payung, panah atas, larangan lipat, dan peringatan.
+- Tambah profil posisi untuk label otomatis, A6, thermal 100 × 150 mm, A5, dan kustom.
+- Setiap profil mengingat ukuran serta posisi horizontal/vertikalnya sendiri.
+- Status popup sekarang menampilkan jumlah halaman yang diberi stempel.
+
 ## 1.2.0
 
 - Redesain penuh popup dengan tampilan **shipping-label workbench**.

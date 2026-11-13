@@ -62,9 +62,36 @@
           <button id="positionTab" type="button" role="tab" aria-selected="false" aria-controls="positionPanel" tabindex="-1">
             Posisi
           </button>
+          <button id="pagesTab" type="button" role="tab" aria-selected="false" aria-controls="pagesPanel" tabindex="-1">
+            Halaman
+          </button>
         </div>
 
         <section id="appearancePanel" class="tab-panel appearance-panel" role="tabpanel" aria-labelledby="appearanceTab">
+          <div class="select-fields">
+            <label class="select-field">
+              <span>Preset</span>
+              <select id="preset">
+                <option value="fragile">Fragile</option>
+                <option value="keep-dry">Jaga tetap kering</option>
+                <option value="this-side-up">Sisi ini ke atas</option>
+                <option value="do-not-fold">Jangan dilipat</option>
+                <option value="custom">Kustom</option>
+              </select>
+            </label>
+            <label class="select-field">
+              <span>Ikon handling</span>
+              <select id="handlingIcon">
+                <option value="fragile">Gelas fragile</option>
+                <option value="umbrella">Payung</option>
+                <option value="up">Panah atas</option>
+                <option value="fold">Jangan lipat</option>
+                <option value="warning">Peringatan</option>
+                <option value="none">Tanpa ikon</option>
+              </select>
+            </label>
+          </div>
+
           <div class="control-row style-row">
             <span class="control-label">Gaya</span>
             <div class="style-picker" role="radiogroup" aria-label="Gaya stempel">
@@ -105,12 +132,23 @@
         </section>
 
         <section id="positionPanel" class="tab-panel position-panel" role="tabpanel" aria-labelledby="positionTab" hidden>
+          <label class="profile-field">
+            <span>Profil label</span>
+            <select id="labelProfile">
+              <option value="auto">Otomatis / standar</option>
+              <option value="a6">A6 (105 × 148 mm)</option>
+              <option value="thermal">Thermal (100 × 150 mm)</option>
+              <option value="a5">A5 / lembar besar</option>
+              <option value="custom">Profil kustom</option>
+            </select>
+          </label>
+
           <div class="position-heading">
             <div>
               <span class="section-kicker">KOORDINAT AMAN</span>
               <strong id="positionSummary">Tengah · Awal</strong>
             </div>
-            <button id="resetPosition" class="reset-button" type="button" title="Kembalikan posisi awal">
+            <button id="resetPosition" class="reset-button" type="button" title="Kembalikan ukuran dan posisi profil">
               Reset
             </button>
           </div>
@@ -141,6 +179,27 @@
 
           <p class="safe-note"><span aria-hidden="true">✓</span> Gerakan dibatasi agar tidak mengenai barcode dan data label.</p>
         </section>
+
+        <section id="pagesPanel" class="tab-panel pages-panel" role="tabpanel" aria-labelledby="pagesTab" hidden>
+          <div class="pages-heading">
+            <div>
+              <span class="section-kicker">PDF BATCH</span>
+              <strong id="pageSummary">Menunggu dokumen</strong>
+            </div>
+            <div class="page-quick-actions">
+              <button id="selectAllPages" type="button">Semua</button>
+              <button id="clearPages" type="button">Kosongkan</button>
+            </div>
+          </div>
+
+          <div class="scope-picker" role="radiogroup" aria-label="Cakupan halaman">
+            <button type="button" data-page-mode="all" role="radio" aria-checked="true">Semua halaman</button>
+            <button type="button" data-page-mode="custom" role="radio" aria-checked="false">Pilih manual</button>
+          </div>
+
+          <div id="pageGrid" class="page-grid" aria-label="Pilih nomor halaman"></div>
+          <p id="pageNote" class="page-note">Jumlah halaman muncul setelah PDF selesai dimuat.</p>
+        </section>
       </section>
 
       <section id="status" class="status-line" data-tone="muted" role="status" aria-live="polite">
@@ -163,7 +222,7 @@
       </section>
 
       <footer class="meta-footer">
-        <span id="version">v1.2.0</span>
+        <span id="version">v1.3.0</span>
         <span class="meta-separator"></span>
         <span><span class="local-dot" aria-hidden="true"></span> Diproses lokal</span>
       </footer>

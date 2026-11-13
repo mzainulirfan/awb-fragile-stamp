@@ -15,12 +15,15 @@ self.importScripts('lib/pdf-lib.min.js', 'lib/fragile-stamp.js');
 
 const STAMP_DEFAULT = {
   variant: 'badge',
+  icon: 'fragile',
   main: 'FRAGILE',
   sub: 'JANGAN DIBANTING',
   small: 'HANDLE WITH CARE',
   scale: 1,
   positionX: 0,
   positionY: 0,
+  pageMode: 'all',
+  selectedPages: [],
 };
 
 function base64ToBytes(b64) {
@@ -75,12 +78,16 @@ async function handleStamp(payload) {
   }
 
   const settings = Object.assign({}, STAMP_DEFAULT, payload.settings || {});
-  const stamped = await self.FragileStamp.stamp(bytes, settings);
+  const result = self.FragileStamp.stampDetailed
+    ? await self.FragileStamp.stampDetailed(bytes, settings)
+    : { bytes: await self.FragileStamp.stamp(bytes, settings), pageCount: 0, stampedPages: [] };
 
   return {
     ok: true,
-    bytes: bytesToBase64(stamped),
-    size: stamped.length,
+    bytes: bytesToBase64(result.bytes),
+    size: result.bytes.length,
+    pageCount: result.pageCount,
+    stampedPages: result.stampedPages,
   };
 }
 

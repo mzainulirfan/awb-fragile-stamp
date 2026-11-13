@@ -18,12 +18,15 @@
   const DEFAULTS = {
     enabled: true,
     variant: 'badge',
+    icon: 'fragile',
     main: 'FRAGILE',
     sub: 'JANGAN DIBANTING',
     small: 'HANDLE WITH CARE',
     scale: 1,
     positionX: 0,
     positionY: 0,
+    pageMode: 'all',
+    selectedPages: [],
   };
 
   const state = {
@@ -32,6 +35,8 @@
     originalBytes: null,
     source: '',
     result: null, // { key, url, bytes }
+    pageCount: 0,
+    stampedPages: [],
     working: false,
     pending: false,
     status: 'idle',
@@ -147,14 +152,24 @@
 
   function stampPayload() {
     const s = state.settings;
+    const icons = ['warning', 'fragile', 'umbrella', 'up', 'fold', 'none'];
+    const selectedPages = Array.isArray(s.selectedPages)
+      ? Array.from(new Set(s.selectedPages
+        .map((value) => Math.trunc(Number(value)))
+        .filter((value) => value > 0)))
+        .sort((a, b) => a - b)
+      : [];
     return {
       variant: s.variant === 'bar' || s.variant === 'text' ? s.variant : 'badge',
+      icon: icons.includes(s.icon) ? s.icon : DEFAULTS.icon,
       main: s.main || DEFAULTS.main,
       sub: s.sub || '',
       small: s.small || '',
       scale: Number(s.scale) || 1,
       positionX: Number(s.positionX) || 0,
       positionY: Number(s.positionY) || 0,
+      pageMode: s.pageMode === 'custom' ? 'custom' : 'all',
+      selectedPages,
     };
   }
 
@@ -197,7 +212,11 @@
       bytes: bytesToBase64(bytes),
       settings: stampPayload(),
     });
-    return base64ToBytes(response.bytes);
+    return {
+      bytes: base64ToBytes(response.bytes),
+      pageCount: Math.max(0, Math.trunc(Number(response.pageCount) || 0)),
+      stampedPages: Array.isArray(response.stampedPages) ? response.stampedPages : [],
+    };
   }
 
   /* ------------------------------------------------------------------ *
@@ -250,12 +269,14 @@
       removeMap(state.originalSrc);
       state.originalSrc = current;
       state.originalBytes = null;
+      state.pageCount = 0;
+      state.stampedPages = [];
     }
 
     const key = `${JSON.stringify(stampPayload())}|${state.originalSrc}`;
     if (state.result && state.result.key === key) {
       if (!isOurs) swapIframe(iframe, state.result.url);
-      setStatus('done', 'FRAGILE aktif');
+      setStatus('done', `${state.stampedPages.length}/${state.pageCount || state.stampedPages.length} halaman distempel`);
       return;
     }
 
@@ -277,15 +298,21 @@
       }
 
       const stamped = await stamp(state.originalBytes);
-      const url = URL.createObjectURL(new Blob([stamped], { type: 'application/pdf' }));
+      state.pageCount = stamped.pageCount;
+      state.stampedPages = stamped.stampedPages;
+      const url = URL.createObjectURL(new Blob([stamped.bytes], { type: 'application/pdf' }));
       const previous = state.result && state.result.url;
 
-      state.result = { key, url, bytes: stamped };
+      state.result = { key, url, bytes: stamped.bytes };
       swapIframe(iframe, url);
       if (previous) setTimeout(() => URL.revokeObjectURL(previous), 60000);
 
-      setStatus('done', 'FRAGILE aktif');
-      log('stempel diterapkan', { source: state.source, size: stamped.length });
+      setStatus('done', `${state.stampedPages.length}/${state.pageCount || state.stampedPages.length} halaman distempel`);
+      log('stempel diterapkan', {
+        source: state.source,
+        size: stamped.bytes.length,
+        pages: state.stampedPages,
+      });
       iframe.dispatchEvent(new CustomEvent('awbfz:stamped', { bubbles: true }));
     } catch (err) {
       setStatus('error', String((err && err.message) || err));
@@ -399,6 +426,7 @@
 
     const els = {
       toast: root.querySelector('.toast'),
+      title: root.querySelector('.title'),
       msg: root.querySelector('.msg'),
       open: root.querySelector('[data-act="open"]'),
       save: root.querySelector('[data-act="save"]'),
@@ -420,9 +448,10 @@
 
     const view = ensureUi();
     if (!view) return;
-    const { toast, msg } = view.els;
+    const { toast, title, msg } = view.els;
 
     toast.dataset.state = status;
+    title.textContent = String(state.settings.main || 'HANDLING').slice(0, 28);
     msg.textContent = note || '';
 
     clearTimeout(state.toastTimer);
@@ -453,7 +482,11 @@
     if (!state.result) return;
     const a = document.createElement('a');
     a.href = state.result.url;
-    a.download = 'Label Pengiriman - FRAGILE.pdf';
+    const label = String(state.settings.main || 'HANDLING')
+      .replace(/[^a-z0-9 _-]/gi, '')
+      .trim()
+      .slice(0, 32) || 'HANDLING';
+    a.download = `Label Pengiriman - ${label}.pdf`;
     a.rel = 'noopener';
     document.body.appendChild(a);
     a.click();
@@ -574,6 +607,8 @@
         source: state.source,
         ready: Boolean(state.result),
         enabled: Boolean(state.settings.enabled),
+        pageCount: state.pageCount,
+        stampedPages: state.stampedPages,
       });
       return false;
     }
